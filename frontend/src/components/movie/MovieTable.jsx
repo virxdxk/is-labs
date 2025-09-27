@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import {DataTable} from 'primereact/datatable'
 import {Column} from 'primereact/column'
 import {format, parseISO} from "date-fns";
@@ -15,6 +15,37 @@ const MovieTable = ({
                         selection,
                         onSelectionChange
                     }) => {
+
+    const ws = useRef(null);
+
+    useEffect(() => {
+        ws.current = new WebSocket('ws://localhost:8080/is-labs-1.0/ws');
+
+        ws.current.onopen = () => {
+            console.log('WebSocket connected for movies');
+        };
+
+        ws.current.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'MOVIE') {
+                setLazyState(prev => ({...prev}));
+            }
+        };
+
+        ws.current.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+
+        ws.current.onclose = () => {
+            console.log('WebSocket disconnected for movies');
+        };
+
+        return () => {
+            if (ws.current) {
+                ws.current.close();
+            }
+        };
+    }, []);
 
     const onPage = (event) => {
         setLazyState(prev => ({

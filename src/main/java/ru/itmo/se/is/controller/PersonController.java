@@ -11,6 +11,8 @@ import ru.itmo.se.is.dto.person.PersonLazyBeanParamDto;
 import ru.itmo.se.is.dto.person.PersonRequestDto;
 import ru.itmo.se.is.dto.person.PersonResponseDto;
 import ru.itmo.se.is.service.PersonService;
+import ru.itmo.se.is.websocket.WebSocketEndpoint;
+import ru.itmo.se.is.websocket.WebSocketMessageType;
 
 import java.net.URI;
 
@@ -35,7 +37,7 @@ public class PersonController {
                 .path("{id}")
                 .resolveTemplate("id", createdPerson.getId())
                 .build();
-
+        WebSocketEndpoint.broadcast(WebSocketMessageType.PERSON);
         return Response.created(location).entity(createdPerson).build();
     }
 
@@ -43,6 +45,7 @@ public class PersonController {
     @Path("/{id}")
     public Response updatePerson(@PathParam("id") long id, @Valid PersonRequestDto dto) {
         service.update(id, dto);
+        WebSocketEndpoint.broadcast(WebSocketMessageType.PERSON);
         return Response.noContent().build();
     }
 
@@ -50,6 +53,7 @@ public class PersonController {
     @Path("/{id}")
     public Response deletePerson(@PathParam("id") long id) {
         service.delete(id);
+        WebSocketEndpoint.broadcast(WebSocketMessageType.PERSON);
         return Response.noContent().build();
     }
 }
