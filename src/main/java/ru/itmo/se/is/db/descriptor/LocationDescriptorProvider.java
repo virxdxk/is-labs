@@ -14,25 +14,25 @@ public class LocationDescriptorProvider {
     @ApplicationScoped
     @EntityDescriptor
     public ClassDescriptor createLocationDescriptor() {
-        ClassDescriptor locationDesc = new ClassDescriptor();
-        locationDesc.setJavaClass(Location.class);
-        locationDesc.descriptorIsAggregate();
+        ClassDescriptor descriptor = new ClassDescriptor();
+        descriptor.setJavaClass(Location.class);
+        descriptor.descriptorIsAggregate();
 
-        DirectToFieldMapping locX = new DirectToFieldMapping();
-        locX.setAttributeName("x");
-        locX.setFieldName("x");
-        locationDesc.addMapping(locX);
+        DirectToFieldMapping x = new DirectToFieldMapping();
+        x.setAttributeName("x");
+        x.setFieldName("x");
+        descriptor.addMapping(x);
 
-        DirectToFieldMapping locY = new DirectToFieldMapping();
-        locY.setAttributeName("y");
-        locY.setFieldName("y");
-        locationDesc.addMapping(locY);
+        DirectToFieldMapping y = new DirectToFieldMapping();
+        y.setAttributeName("y");
+        y.setFieldName("y");
+        descriptor.addMapping(y);
 
-        DirectToFieldMapping locZ = new DirectToFieldMapping();
-        locZ.setAttributeName("z");
-        locZ.setFieldName("z");
-        locationDesc.addMapping(locZ);
+        DirectToFieldMapping z = new DirectToFieldMapping();
+        z.setAttributeName("z");
+        z.setFieldName("z");
+        descriptor.addMapping(z);
 
-        return locationDesc;
+        return descriptor;
     }
 }

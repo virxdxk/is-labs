@@ -27,8 +27,6 @@ public class EclipseLinkProjectProvider {
     public Project createProject() {
         Project project = new Project();
         descriptors.forEach(project::addDescriptor);
-
-
         project.setLogin(databaseLogin);
         return project;
     }

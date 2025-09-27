@@ -8,7 +8,7 @@ import ru.itmo.se.is.entity.Person;
 
 @ApplicationScoped
 @NoArgsConstructor
-public class EclipseLinkLazyPersonRepository extends EclipseLinkLazyRepository<Person> {
+public class EclipseLinkLazyPersonRepository extends GenericEclipseLinkLazyRepository<Person> {
     @Inject
     public EclipseLinkLazyPersonRepository(DatabaseSession session) {
         super(Person.class, session);

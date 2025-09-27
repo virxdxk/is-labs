@@ -3,6 +3,7 @@ package ru.itmo.se.is.mapper;
 import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import ru.itmo.se.is.config.MapperConfig;
 import ru.itmo.se.is.dto.movie.MovieRequestDto;
 import ru.itmo.se.is.dto.movie.MovieResponseDto;
@@ -25,6 +26,13 @@ public abstract class MovieMapper {
     @Mapping(target = "operator", source = "operatorId")
     public abstract Movie toMovie(MovieRequestDto dto);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "director", source = "directorId")
+    @Mapping(target = "screenwriter", source = "screenwriterId")
+    @Mapping(target = "operator", source = "operatorId")
+    public abstract void toMovie(MovieRequestDto dto, @MappingTarget Movie movie);
+
     public abstract MovieResponseDto toDto(Movie movie);
 
     public abstract List<MovieResponseDto> toDto(List<Movie> movies);
@@ -33,6 +41,6 @@ public abstract class MovieMapper {
         if (personId == null) {
             return null;
         }
-        return personService.getPersonById(personId);
+        return personService.getById(personId);
     }
 }

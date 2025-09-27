@@ -72,7 +72,7 @@ const SpecialOperationsPage = () => {
         resetStates()
         try {
             const response = await MovieService.getDirectorsWithoutOscars()
-            setDirectorsWithoutOscars(response.data.count)
+            setDirectorsWithoutOscars(response.data)
             setResult('Режиссеры без Оскаров загружены')
         } catch (error) {
             toast.current.show({ severity: 'error', summary: 'Ошибка', detail: 'Не удалось выполнить операцию' })

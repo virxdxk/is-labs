@@ -7,11 +7,10 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import ru.itmo.se.is.dto.lazy.LazyBeanParamDto;
+import ru.itmo.se.is.dto.person.PersonLazyBeanParamDto;
 import ru.itmo.se.is.dto.person.PersonRequestDto;
 import ru.itmo.se.is.dto.person.PersonResponseDto;
 import ru.itmo.se.is.service.PersonService;
-import ru.itmo.se.is.util.LazyFilterByUtil;
 
 import java.net.URI;
 
@@ -23,14 +22,9 @@ public class PersonController {
     @Inject
     private PersonService service;
 
-    @Inject
-    private LazyFilterByUtil lazyFilterByUtil;
-
     @GET
-    public Response getAllPeople(@BeanParam LazyBeanParamDto lazyBeanParamDto, @Context UriInfo uriInfo) {
-        return Response.ok(service.lazyGet(
-                lazyBeanParamDto, lazyFilterByUtil.extractFilterByFromUriInfo(uriInfo)
-        )).build();
+    public Response getAllPeople(@Valid @BeanParam PersonLazyBeanParamDto lazyBeanParamDto) {
+        return Response.ok(service.lazyGet(lazyBeanParamDto)).build();
     }
 
     @POST

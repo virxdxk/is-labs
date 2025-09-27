@@ -3,20 +3,19 @@ package ru.itmo.se.is.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import ru.itmo.se.is.dto.lazy.LazyBeanParamDto;
-import ru.itmo.se.is.dto.movie.MovieCountResponseDto;
-import ru.itmo.se.is.dto.movie.MovieLazyResponseDto;
-import ru.itmo.se.is.dto.movie.MovieRequestDto;
-import ru.itmo.se.is.dto.movie.MovieResponseDto;
+import ru.itmo.se.is.dto.movie.*;
 import ru.itmo.se.is.dto.person.PersonResponseDto;
 import ru.itmo.se.is.entity.Movie;
 import ru.itmo.se.is.entity.Person;
 import ru.itmo.se.is.entity.value.MpaaRating;
+import ru.itmo.se.is.exception.EntityNotFoundException;
 import ru.itmo.se.is.mapper.MovieMapper;
 import ru.itmo.se.is.mapper.PersonMapper;
 import ru.itmo.se.is.repository.EclipseLinkLazyMovieRepository;
-import ru.itmo.se.is.repository.MovieRepository;
+import ru.itmo.se.is.repository.Repository;
 
+import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +24,7 @@ import java.util.Map;
 public class MovieService {
 
     @Inject
-    private MovieRepository repository;
+    private Repository<Movie, Long> repository;
 
     @Inject
     private EclipseLinkLazyMovieRepository lazyRepository;
@@ -37,23 +36,29 @@ public class MovieService {
     private PersonMapper personMapper;
 
     public MovieResponseDto create(MovieRequestDto dto) {
+        Movie movie = mapper.toMovie(dto);
+        movie.setCreationDate(ZonedDateTime.now());
         return mapper.toDto(
-                repository.insert(
-                        mapper.toMovie(dto)
+                repository.save(
+                        movie
                 )
         );
     }
 
     public void update(long id, MovieRequestDto dto) {
-        Movie movie = mapper.toMovie(dto);
-        repository.update(id, movie);
+        Movie movie = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Movie with id %d not found", id)));
+        mapper.toMovie(dto, movie);
+        repository.save(movie);
     }
 
     public void delete(long id) {
         repository.deleteById(id);
     }
 
-    public MovieLazyResponseDto lazyGet(LazyBeanParamDto lazyBeanParamDto, Map<String, String> filterBy) {
+    public MovieLazyResponseDto lazyGet(MovieLazyBeanParamDto lazyBeanParamDto) {
+        Map<String, Object> filterBy = getFilterBy(lazyBeanParamDto);
+
         List<Movie> data = lazyRepository.load(
                 lazyBeanParamDto.getFirst(),
                 lazyBeanParamDto.getPageSize(),
@@ -63,6 +68,21 @@ public class MovieService {
         );
         long totalRecords = lazyRepository.count(filterBy);
         return new MovieLazyResponseDto(mapper.toDto(data), totalRecords);
+    }
+
+    private Map<String, Object> getFilterBy(MovieLazyBeanParamDto lazyBeanParamDto) {
+        Map<String, Object> filterBy = new HashMap<>();
+        if (lazyBeanParamDto.getIdFilter() != null)
+            filterBy.put("id", lazyBeanParamDto.getIdFilter());
+        if (lazyBeanParamDto.getNameFilter() != null)
+            filterBy.put("name", lazyBeanParamDto.getNameFilter());
+        if (lazyBeanParamDto.getGenreFilter() != null)
+            filterBy.put("genre", lazyBeanParamDto.getGenreFilter());
+        if (lazyBeanParamDto.getMpaaRatingFilter() != null)
+            filterBy.put("mpaaRating", lazyBeanParamDto.getMpaaRatingFilter());
+        if (lazyBeanParamDto.getTaglineFilter() != null)
+            filterBy.put("tagline", lazyBeanParamDto.getTaglineFilter());
+        return filterBy;
     }
 
     public MovieCountResponseDto countByTagline(String tagline) {
@@ -107,7 +127,7 @@ public class MovieService {
                 .filter(m -> m.getMpaaRating().equals(MpaaRating.R))
                 .forEach(m -> {
                     m.setOscarsCount(m.getOscarsCount() + 1);
-                    repository.insert(m);
+                    repository.save(m);
                 });
     }
 }

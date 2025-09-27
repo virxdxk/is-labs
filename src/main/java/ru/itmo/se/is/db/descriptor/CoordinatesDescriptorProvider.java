@@ -14,20 +14,20 @@ public class CoordinatesDescriptorProvider {
     @ApplicationScoped
     @EntityDescriptor
     public ClassDescriptor createCoordinatesDescriptor() {
-        ClassDescriptor coordsDesc = new ClassDescriptor();
-        coordsDesc.setJavaClass(Coordinates.class);
-        coordsDesc.descriptorIsAggregate();
+        ClassDescriptor descriptor = new ClassDescriptor();
+        descriptor.setJavaClass(Coordinates.class);
+        descriptor.descriptorIsAggregate();
 
-        DirectToFieldMapping coordsX = new DirectToFieldMapping();
-        coordsX.setAttributeName("x");
-        coordsX.setFieldName("x");
-        coordsDesc.addMapping(coordsX);
+        DirectToFieldMapping xMapping = new DirectToFieldMapping();
+        xMapping.setAttributeName("x");
+        xMapping.setFieldName("x");
+        descriptor.addMapping(xMapping);
 
-        DirectToFieldMapping coordsY = new DirectToFieldMapping();
-        coordsY.setAttributeName("y");
-        coordsY.setFieldName("y");
-        coordsDesc.addMapping(coordsY);
+        DirectToFieldMapping yMapping = new DirectToFieldMapping();
+        yMapping.setAttributeName("y");
+        yMapping.setFieldName("y");
+        descriptor.addMapping(yMapping);
 
-        return coordsDesc;
+        return descriptor;
     }
 }

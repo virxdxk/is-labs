@@ -7,11 +7,10 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import ru.itmo.se.is.dto.lazy.LazyBeanParamDto;
+import ru.itmo.se.is.dto.movie.MovieLazyBeanParamDto;
 import ru.itmo.se.is.dto.movie.MovieRequestDto;
 import ru.itmo.se.is.dto.movie.MovieResponseDto;
 import ru.itmo.se.is.service.MovieService;
-import ru.itmo.se.is.util.LazyFilterByUtil;
 
 import java.net.URI;
 
@@ -23,14 +22,9 @@ public class MovieController {
     @Inject
     private MovieService service;
 
-    @Inject
-    private LazyFilterByUtil lazyFilterByUtil;
-
     @GET
-    public Response getAllMovies(@BeanParam LazyBeanParamDto lazyBeanParamDto, @Context UriInfo uriInfo) {
-        return Response.ok(service.lazyGet(
-                lazyBeanParamDto, lazyFilterByUtil.extractFilterByFromUriInfo(uriInfo)
-        )).build();
+    public Response getAllMovies(@Valid @BeanParam MovieLazyBeanParamDto lazyBeanParamDto) {
+        return Response.ok(service.lazyGet(lazyBeanParamDto)).build();
     }
 
     @POST

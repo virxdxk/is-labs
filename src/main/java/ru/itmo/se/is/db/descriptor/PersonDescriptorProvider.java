@@ -33,25 +33,25 @@ public class PersonDescriptorProvider {
         idMapping.setIsPrimaryKeyMapping(true);
         descriptor.addMapping(idMapping);
 
-        DirectToFieldMapping personName = new DirectToFieldMapping();
-        personName.setAttributeName("name");
-        personName.setFieldName("name");
-        descriptor.addMapping(personName);
+        DirectToFieldMapping nameMapping = new DirectToFieldMapping();
+        nameMapping.setAttributeName("name");
+        nameMapping.setFieldName("name");
+        descriptor.addMapping(nameMapping);
 
-        DirectToFieldMapping eyeColorMap = new DirectToFieldMapping();
-        eyeColorMap.setAttributeName("eyeColor");
-        eyeColorMap.setFieldName("eye_color");
-        EnumTypeConverter eyeConv = new EnumTypeConverter(eyeColorMap, Color.class, false);
-        eyeColorMap.setConverter(eyeConv);
-        descriptor.addMapping(eyeColorMap);
+        DirectToFieldMapping eyeColorMapping = new DirectToFieldMapping();
+        eyeColorMapping.setAttributeName("eyeColor");
+        eyeColorMapping.setFieldName("eye_color");
+        EnumTypeConverter eyeColorConverter = new EnumTypeConverter(eyeColorMapping, Color.class, false);
+        eyeColorMapping.setConverter(eyeColorConverter);
+        descriptor.addMapping(eyeColorMapping);
 
-        DirectToFieldMapping hairColorMap = new DirectToFieldMapping();
-        hairColorMap.setAttributeName("hairColor");
-        hairColorMap.setFieldName("hair_color");
-        hairColorMap.setIsOptional(false);
-        EnumTypeConverter hairConv = new EnumTypeConverter(hairColorMap, Color.class, false);
-        hairColorMap.setConverter(hairConv);
-        descriptor.addMapping(hairColorMap);
+        DirectToFieldMapping hairColorMapping = new DirectToFieldMapping();
+        hairColorMapping.setAttributeName("hairColor");
+        hairColorMapping.setFieldName("hair_color");
+        hairColorMapping.setIsOptional(false);
+        EnumTypeConverter hairColorConverter = new EnumTypeConverter(hairColorMapping, Color.class, false);
+        hairColorMapping.setConverter(hairColorConverter);
+        descriptor.addMapping(hairColorMapping);
 
         AggregateObjectMapping locationMapping = new AggregateObjectMapping();
         locationMapping.setAttributeName("location");
@@ -61,17 +61,17 @@ public class PersonDescriptorProvider {
         locationMapping.addFieldNameTranslation("location_z", "z");
         descriptor.addMapping(locationMapping);
 
-        DirectToFieldMapping weight = new DirectToFieldMapping();
-        weight.setAttributeName("weight");
-        weight.setFieldName("weight");
-        descriptor.addMapping(weight);
+        DirectToFieldMapping weightMapping = new DirectToFieldMapping();
+        weightMapping.setAttributeName("weight");
+        weightMapping.setFieldName("weight");
+        descriptor.addMapping(weightMapping);
 
-        DirectToFieldMapping natMap = new DirectToFieldMapping();
-        natMap.setAttributeName("nationality");
-        natMap.setFieldName("nationality");
-        EnumTypeConverter natConv = new EnumTypeConverter(natMap, Country.class, false);
-        natMap.setConverter(natConv);
-        descriptor.addMapping(natMap);
+        DirectToFieldMapping nationalityMapping = new DirectToFieldMapping();
+        nationalityMapping.setAttributeName("nationality");
+        nationalityMapping.setFieldName("nationality");
+        EnumTypeConverter natConv = new EnumTypeConverter(nationalityMapping, Country.class, false);
+        nationalityMapping.setConverter(natConv);
+        descriptor.addMapping(nationalityMapping);
 
         return descriptor;
     }
