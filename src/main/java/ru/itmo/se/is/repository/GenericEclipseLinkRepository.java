@@ -11,6 +11,7 @@ import org.eclipse.persistence.sessions.UnitOfWork;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,6 +43,14 @@ public abstract class GenericEclipseLinkRepository<T, ID> implements Repository<
         return managed;
     }
 
+    public void update(T entity, Consumer<T> fieldUpdater) {
+        UnitOfWork uow = session.acquireUnitOfWork();
+        T managed = (T) uow.deepMergeClone(entity);
+        fieldUpdater.accept(managed);
+        registerNestedFields(uow, managed);
+        uow.commit();
+    }
+
     @Override
     public void deleteById(ID id) {
         UnitOfWork uow = session.acquireUnitOfWork();
@@ -50,4 +59,6 @@ public abstract class GenericEclipseLinkRepository<T, ID> implements Repository<
         uow.executeQuery(query);
         uow.commit();
     }
+
+    protected abstract void registerNestedFields(UnitOfWork uow, T entity);
 }

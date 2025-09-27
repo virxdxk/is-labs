@@ -2,7 +2,6 @@ package ru.itmo.se.is.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.postgresql.util.PSQLException;
 import ru.itmo.se.is.dto.person.PersonLazyBeanParamDto;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 @ApplicationScoped
-@Transactional
 public class PersonService {
     @Inject
     private Repository<Person, Long> repository;
@@ -43,8 +41,7 @@ public class PersonService {
     public void update(long id, PersonRequestDto dto) {
         Person person = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Person with id %d not found", id)));
-        mapper.toPerson(dto, person);
-        repository.save(person);
+        repository.update(person, (p) -> mapper.toPerson(dto, p));
     }
 
     public void delete(long id) {

@@ -2,6 +2,7 @@ package ru.itmo.se.is.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public interface Repository<T, ID> {
     Optional<T> findById(ID id);
@@ -9,6 +10,8 @@ public interface Repository<T, ID> {
     List<T> findAll();
 
     T save(T entity);
+
+    void update(T entity, Consumer<T> fieldUpdater);
 
     void deleteById(ID id);
 }

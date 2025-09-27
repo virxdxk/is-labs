@@ -2,7 +2,6 @@ package ru.itmo.se.is.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import ru.itmo.se.is.dto.movie.*;
 import ru.itmo.se.is.dto.person.PersonResponseDto;
 import ru.itmo.se.is.entity.Movie;
@@ -18,9 +17,9 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @ApplicationScoped
-@Transactional
 public class MovieService {
 
     @Inject
@@ -48,8 +47,7 @@ public class MovieService {
     public void update(long id, MovieRequestDto dto) {
         Movie movie = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Movie with id %d not found", id)));
-        mapper.toMovie(dto, movie);
-        repository.save(movie);
+        repository.update(movie, (m) -> mapper.toMovie(dto, m));
     }
 
     public void delete(long id) {
@@ -124,10 +122,9 @@ public class MovieService {
 
     public void addOscarToRated() {
         repository.findAll().stream()
-                .filter(m -> m.getMpaaRating().equals(MpaaRating.R))
+                .filter(m -> Objects.equals(m.getMpaaRating(), (MpaaRating.R)))
                 .forEach(m -> {
-                    m.setOscarsCount(m.getOscarsCount() + 1);
-                    repository.save(m);
+                    repository.update(m, (mv) -> mv.setOscarsCount(m.getOscarsCount() + 1));
                 });
     }
 }
