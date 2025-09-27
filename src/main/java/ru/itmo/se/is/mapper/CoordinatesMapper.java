@@ -6,7 +6,7 @@ import ru.itmo.se.is.dto.coordinates.CoordinatesRequestDto;
 import ru.itmo.se.is.dto.coordinates.CoordinatesResponseDto;
 import ru.itmo.se.is.entity.Coordinates;
 
-@Mapper(config =  MapperConfig.class)
+@Mapper(config = MapperConfig.class)
 public interface CoordinatesMapper {
     Coordinates toCoordinates(CoordinatesRequestDto dto);
 

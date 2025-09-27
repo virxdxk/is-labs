@@ -1,7 +1,6 @@
 package ru.itmo.se.is.mapper;
 
 import jakarta.inject.Inject;
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.itmo.se.is.config.MapperConfig;
@@ -25,13 +24,6 @@ public abstract class MovieMapper {
     @Mapping(target = "screenwriter", source = "screenwriterId")
     @Mapping(target = "operator", source = "operatorId")
     public abstract Movie toMovie(MovieRequestDto dto);
-
-//    @Mapping(target = "creationDate", ignore = true)
-//    @Mapping(target = "director", source = "directorId")
-//    @Mapping(target = "screenwriter", source = "screenwriterId")
-//    @Mapping(target = "operator", source = "operatorId")
-//    @Mapping(target = "id", source = "movieId")
-//    public abstract Movie toMovie(MovieRequestDto dto, @Context Long movieId);
 
     public abstract MovieResponseDto toDto(Movie movie);
 

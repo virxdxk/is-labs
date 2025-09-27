@@ -35,8 +35,6 @@ public class MovieService {
 
     @Inject
     private PersonMapper personMapper;
-    @Inject
-    private PersonService personService;
 
     public MovieResponseDto create(MovieRequestDto dto) {
         return mapper.toDto(
@@ -93,7 +91,7 @@ public class MovieService {
 
     public List<PersonResponseDto> getDirectorsWithoutOscars() {
         List<Movie> movies = repository.findAll();
-        List<Person> directors =  movies.stream()
+        List<Person> directors = movies.stream()
                 .filter(m -> m.getOscarsCount() == 0)
                 .map(Movie::getDirector)
                 .filter(d -> movies.stream()

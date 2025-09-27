@@ -61,19 +61,19 @@ public class MovieController {
 
     @GET
     @Path("/count-by-tagline/{tagline}")
-    public Response countByTagline(@PathParam("tagline") String tagline){
+    public Response countByTagline(@PathParam("tagline") String tagline) {
         return Response.ok(service.countByTagline(tagline)).build();
     }
 
     @GET
     @Path("/count-less-than-golden-palm/{count}")
-    public Response countLessThanGoldenPalm(@PathParam("count") long count){
+    public Response countLessThanGoldenPalm(@PathParam("count") long count) {
         return Response.ok(service.countLessThanGoldenPalm(count)).build();
     }
 
     @GET
     @Path("/count-greater-than-golden-palm/{count}")
-    public Response countGreaterThanGoldenPalm(@PathParam("count") long count){
+    public Response countGreaterThanGoldenPalm(@PathParam("count") long count) {
         return Response.ok(service.countGreaterThanGoldenPalm(count)).build();
     }
 
