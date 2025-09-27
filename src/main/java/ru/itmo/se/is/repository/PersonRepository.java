@@ -9,7 +9,9 @@ public interface PersonRepository {
 
     Person findById(long id);
 
-    Person save(Person person);
+    Person insert(Person person);
+
+    Person update(long id, Person person);
 
     void deleteById(long id);
 }

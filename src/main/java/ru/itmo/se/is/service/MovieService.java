@@ -14,7 +14,7 @@ import ru.itmo.se.is.entity.Person;
 import ru.itmo.se.is.entity.value.MpaaRating;
 import ru.itmo.se.is.mapper.MovieMapper;
 import ru.itmo.se.is.mapper.PersonMapper;
-import ru.itmo.se.is.repository.JpaLazyMovieRepository;
+import ru.itmo.se.is.repository.EclipseLinkLazyMovieRepository;
 import ru.itmo.se.is.repository.MovieRepository;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class MovieService {
     private MovieRepository repository;
 
     @Inject
-    private JpaLazyMovieRepository lazyRepository;
+    private EclipseLinkLazyMovieRepository lazyRepository;
 
     @Inject
     private MovieMapper mapper;
@@ -40,7 +40,7 @@ public class MovieService {
 
     public MovieResponseDto create(MovieRequestDto dto) {
         return mapper.toDto(
-                repository.save(
+                repository.insert(
                         mapper.toMovie(dto)
                 )
         );
@@ -48,8 +48,7 @@ public class MovieService {
 
     public void update(long id, MovieRequestDto dto) {
         Movie movie = mapper.toMovie(dto);
-        movie.setId(id);
-        repository.save(movie);
+        repository.update(id, movie);
     }
 
     public void delete(long id) {
@@ -110,7 +109,7 @@ public class MovieService {
                 .filter(m -> m.getMpaaRating().equals(MpaaRating.R))
                 .forEach(m -> {
                     m.setOscarsCount(m.getOscarsCount() + 1);
-                    repository.save(m);
+                    repository.insert(m);
                 });
     }
 }

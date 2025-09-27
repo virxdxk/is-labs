@@ -23,7 +23,9 @@ tasks.withType(JavaCompile).configureEach {
 
 dependencies {
     compileOnly('jakarta.platform:jakarta.jakartaee-web-api:11.0.0')
-    implementation('org.eclipse.persistence:org.eclipse.persistence.jpa:4.0.7')
+    implementation('org.eclipse.persistence:org.eclipse.persistence.jpa:4.0.8')
+
+    implementation('org.postgresql:postgresql:42.7.7')
 
     implementation("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")

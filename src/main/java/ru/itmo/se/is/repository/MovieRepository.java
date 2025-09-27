@@ -9,7 +9,9 @@ public interface MovieRepository {
 
     Movie findById(long id);
 
-    Movie save(Movie movie);
+    Movie insert(Movie movie);
+
+    Movie update(long id, Movie movie);
 
     void deleteById(long id);
 }

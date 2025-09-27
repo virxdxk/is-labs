@@ -9,7 +9,7 @@ import ru.itmo.se.is.dto.person.PersonRequestDto;
 import ru.itmo.se.is.dto.person.PersonResponseDto;
 import ru.itmo.se.is.entity.Person;
 import ru.itmo.se.is.mapper.PersonMapper;
-import ru.itmo.se.is.repository.JpaLazyPersonRepository;
+import ru.itmo.se.is.repository.EclipseLinkLazyPersonRepository;
 import ru.itmo.se.is.repository.PersonRepository;
 
 import java.util.List;
@@ -22,14 +22,14 @@ public class PersonService {
     private PersonRepository repository;
 
     @Inject
-    private JpaLazyPersonRepository lazyRepository;
+    private EclipseLinkLazyPersonRepository lazyRepository;
 
     @Inject
     private PersonMapper mapper;
 
     public PersonResponseDto create(PersonRequestDto dto) {
         return mapper.toDto(
-                repository.save(
+                repository.insert(
                         mapper.toPerson(dto)
                 )
         );
@@ -37,8 +37,7 @@ public class PersonService {
 
     public void update(long id, PersonRequestDto dto) {
         Person person = mapper.toPerson(dto);
-        person.setId(id);
-        repository.save(person);
+        repository.update(id, person);
     }
 
     public void delete(long id) {

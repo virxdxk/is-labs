@@ -1,40 +1,38 @@
 package ru.itmo.se.is.entity;
 
-import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.itmo.se.is.entity.value.Color;
 import ru.itmo.se.is.entity.value.Country;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
-
-@Entity
-@Table(name = "person")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Person {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @EqualsAndHashCode.Include
     private Long id;
-
-    @Column(nullable = false)
     private String name;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "eye_color")
     private Color eyeColor;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "hair_color", nullable = false)
     private Color hairColor;
-
-    @Embedded
     private Location location;
-
-    @Column(nullable = false)
     private float weight;
-
-    @Enumerated(EnumType.STRING)
     private Country nationality;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(id, person.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : System.identityHashCode(this);
+    }
 }
