@@ -5,6 +5,7 @@ import {format, parseISO} from "date-fns";
 import {ru} from "date-fns/locale";
 import {MOVIE_GENRES, MPAA_RATINGS} from "../../domain/values.js";
 import {Dropdown} from "primereact/dropdown";
+import {WS_BASE_PATH} from "../../config.js";
 
 const MovieTable = ({
                         movies,
@@ -19,7 +20,7 @@ const MovieTable = ({
     const ws = useRef(null);
 
     useEffect(() => {
-        ws.current = new WebSocket('ws://localhost:8080/is-labs-1.0/ws');
+        ws.current = new WebSocket(`${WS_BASE_PATH}/ws`);
 
         ws.current.onopen = () => {
             console.log('WebSocket connected for movies');
@@ -81,7 +82,7 @@ const MovieTable = ({
         try {
             const date = parseISO(dateString);
             // Форматируем, например, в "05.10.2023 14:30" или просто "14:30"
-            return format(date, 'dd.MM.yyyy HH:mm', { locale: ru });
+            return format(date, 'dd.MM.yyyy HH:mm', {locale: ru});
         } catch (error) {
             console.error('Ошибка парсинга даты:', error);
             return dateString;

@@ -1,6 +1,7 @@
 import axios from 'axios'
+import {API_BASE_PATH} from "../config.js";
 
-const API_BASE_URL = 'http://localhost:8080/is-labs-1.0/movies'
+const API_BASE_URL = `${API_BASE_PATH}/movies`
 
 class MovieService {
     constructor() {

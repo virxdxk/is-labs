@@ -1,6 +1,5 @@
 package ru.itmo.se.is.entity;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +11,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Person {
-    @EqualsAndHashCode.Include
     private Long id;
     private String name;
     private Color eyeColor;

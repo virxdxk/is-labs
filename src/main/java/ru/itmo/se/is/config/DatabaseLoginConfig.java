@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 import org.eclipse.persistence.platform.database.PostgreSQLPlatform;
 import org.eclipse.persistence.sequencing.NativeSequence;
 import org.eclipse.persistence.sessions.DatabaseLogin;
+import org.eclipse.persistence.sessions.JNDIConnector;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 @ApplicationScoped
 @NoArgsConstructor
@@ -14,17 +19,21 @@ public class DatabaseLoginConfig {
     @Produces
     @ApplicationScoped
     public DatabaseLogin createDatabaseLogin() {
-        String dbUrl = "jdbc:postgresql://localhost:5432/testdb";
-        String dbUser = "postgres";
-        String dbPassword = "password";
+        try {
+            DataSource ds = (DataSource) new InitialContext().lookup("java:/jdbc/MyDS");
 
-        DatabaseLogin login = new DatabaseLogin();
-        login.setPlatform(new PostgreSQLPlatform());
-        login.setUserName(dbUser);
-        login.setPassword(dbPassword);
-        login.setConnectionString(dbUrl);
-        login.setDefaultSequence(new NativeSequence());
-        login.shouldUseNativeSequencing();
-        return login;
+            JNDIConnector connector = new JNDIConnector();
+            connector.setDataSource(ds);
+
+            DatabaseLogin login = new DatabaseLogin();
+            login.setPlatform(new PostgreSQLPlatform());
+            login.setDefaultSequence(new NativeSequence());
+            login.shouldUseNativeSequencing();
+            login.setConnector(connector);
+
+            return login;
+        } catch (NamingException e) {
+            throw new RuntimeException("Failed to lookup DataSource", e);
+        }
     }
 }

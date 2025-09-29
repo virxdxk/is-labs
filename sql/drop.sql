@@ -1,0 +1,3 @@
+DROP TABLE movie CASCADE;
+
+DROP TABLE person CASCADE;

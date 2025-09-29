@@ -1,9 +1,9 @@
 import React, {useEffect, useRef} from 'react'
 import {DataTable} from 'primereact/datatable'
 import {Column} from 'primereact/column'
-import {Paginator} from 'primereact/paginator'
 import {Dropdown} from "primereact/dropdown";
-import {COLORS, COUNTRIES, MPAA_RATINGS} from "../../domain/values.js";
+import {COLORS, COUNTRIES} from "../../domain/values.js";
+import {WS_BASE_PATH} from "../../config.js";
 
 const PersonTable = ({
                          people,
@@ -18,7 +18,7 @@ const PersonTable = ({
     const ws = useRef(null);
 
     useEffect(() => {
-        ws.current = new WebSocket('ws://localhost:8080/is-labs-1.0/ws');
+        ws.current = new WebSocket(`${WS_BASE_PATH}/ws`);
 
         ws.current.onopen = () => {
             console.log('WebSocket connected for movies');
