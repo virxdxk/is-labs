@@ -83,11 +83,30 @@ build {
 }
 
 // Task to deploy WAR to server via SSH
-task deploy(type: Exec) {
+task deployWAR(type: Exec) {
     dependsOn war
     commandLine 'scp', '-P', '2222', "${project.buildDir}/libs/${project.name}-${project.version}.war", 's412939@helios.cs.ifmo.ru:~/'
     
     doLast {
         println "WAR file deployed to server successfully!"
+    }
+}
+
+// Task to deploy frontend dist to server
+task deployFrontend(type: Exec) {
+    dependsOn frontendBuild
+    commandLine 'scp', '-r', '-P', '2222', "${project.projectDir}/frontend/dist/", 's412939@helios.cs.ifmo.ru:~/'
+    
+    doLast {
+        println "Frontend dist folder deployed to server successfully!"
+    }
+}
+
+// Main deploy task that deploys both WAR and frontend
+task deploy {
+    dependsOn deployWAR, deployFrontend
+    
+    doLast {
+        println "Both WAR file and frontend deployed to server successfully!"
     }
 }
