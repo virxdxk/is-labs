@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'war'
+    id 'com.github.node-gradle.node' version '7.0.2'
 }
 
 group 'ru.itmo.se'
@@ -39,4 +40,54 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+// Node.js configuration
+node {
+    version = '20.19.0'
+    npmVersion = '10.2.4'
+    download = true
+    workDir = file("${project.buildDir}/nodejs")
+    npmWorkDir = file("${project.buildDir}/npm")
+}
+
+// Task to install npm dependencies for frontend
+task frontendNpmInstall(type: NpmTask) {
+    workingDir = file("${project.projectDir}/frontend")
+    args = ['install']
+}
+
+// Task to build frontend
+task frontendBuild(type: NpmTask) {
+    dependsOn frontendNpmInstall
+    workingDir = file("${project.projectDir}/frontend")
+    args = ['run', 'build']
+}
+
+// Task to copy frontend dist to webapp
+task copyFrontendToWebapp(type: Copy) {
+    dependsOn frontendBuild
+    from "${project.projectDir}/frontend/dist"
+    into "${project.buildDir}/webapp"
+}
+
+// Configure WAR task to include frontend
+war {
+    dependsOn copyFrontendToWebapp
+    from "${project.buildDir}/webapp"
+}
+
+// Make build task depend on frontend build
+build {
+    dependsOn copyFrontendToWebapp
+}
+
+// Task to deploy WAR to server via SSH
+task deploy(type: Exec) {
+    dependsOn war
+    commandLine 'scp', '-P', '2222', "${project.buildDir}/libs/${project.name}-${project.version}.war", 's412939@helios.cs.ifmo.ru:~/'
+    
+    doLast {
+        println "WAR file deployed to server successfully!"
+    }
 }
