@@ -1,34 +1,248 @@
+/* Основные стили приложения */
+.App {
+    min-height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
+        url('/background.svg') center/cover no-repeat fixed;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Контейнер с полупрозрачным фоном */
 .container {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
+/* Стили для карточек */
 .p-card {
     margin-bottom: 20px;
+    background: rgba(20, 20, 20, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
 }
 
+.p-card .p-card-body {
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+.p-card .p-card-title {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* Стили для таблиц */
 .p-datatable {
     margin-bottom: 20px;
+    background: rgba(20, 20, 20, 0.8) !important;
+    border-radius: 12px !important;
+    overflow: hidden;
 }
 
+.p-datatable .p-datatable-header {
+    background: rgba(30, 30, 30, 0.9) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+.p-datatable .p-datatable-thead>tr>th {
+    background: rgba(30, 30, 30, 0.9) !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    font-weight: 600;
+}
+
+.p-datatable .p-datatable-tbody>tr {
+    background: rgba(20, 20, 20, 0.8) !important;
+    color: #ffffff !important;
+}
+
+.p-datatable .p-datatable-tbody>tr:nth-child(even) {
+    background: rgba(25, 25, 25, 0.8) !important;
+}
+
+.p-datatable .p-datatable-tbody>tr:hover {
+    background: rgba(40, 40, 40, 0.8) !important;
+}
+
+.p-datatable .p-datatable-tbody>tr>td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+}
+
+/* Стили для кнопок */
 .p-button {
     margin-right: 10px;
     margin-bottom: 10px;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 600;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3) !important;
 }
 
+.p-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4) !important;
+}
+
+.p-button.p-button-secondary {
+    background: linear-gradient(45deg, #6c5ce7, #a29bfe) !important;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3) !important;
+}
+
+.p-button.p-button-secondary:hover {
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4) !important;
+}
+
+.p-button.p-button-danger {
+    background: linear-gradient(45deg, #e17055, #d63031) !important;
+    box-shadow: 0 4px 15px rgba(225, 112, 85, 0.3) !important;
+}
+
+.p-button.p-button-danger:hover {
+    box-shadow: 0 6px 20px rgba(225, 112, 85, 0.4) !important;
+}
+
+/* Стили для форм */
 .form-field {
     margin-bottom: 20px;
 }
 
+.p-inputtext {
+    background: rgba(30, 30, 30, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+}
+
+.p-inputtext:focus {
+    border-color: #ff6b6b !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
+}
+
+.p-dropdown {
+    background: rgba(30, 30, 30, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+}
+
+.p-dropdown .p-dropdown-label {
+    color: #ffffff !important;
+}
+
+.p-dropdown-panel {
+    background: rgba(30, 30, 30, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+    backdrop-filter: blur(10px);
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    color: #ffffff !important;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Стили для меню */
+.p-menubar {
+    background: rgba(20, 20, 20, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+.p-menubar .p-menuitem-link {
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.p-menubar .p-menuitem-link:hover {
+    background: rgba(255, 107, 107, 0.2) !important;
+    color: #ff6b6b !important;
+}
+
+.p-menubar .p-menuitem-link .pi {
+    color: #ff6b6b !important;
+}
+
+/* Сообщения */
 .error-message {
-    color: #ff0000;
+    color: #ff6b6b !important;
     font-size: 0.875rem;
     margin-top: 5px;
+    font-weight: 500;
 }
 
 .success-message {
-    color: #008000;
+    color: #00b894 !important;
     font-size: 0.875rem;
     margin-top: 5px;
+    font-weight: 500;
+}
+
+/* Дополнительные стили */
+.p-dialog {
+    background: rgba(20, 20, 20, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 15px !important;
+    backdrop-filter: blur(15px);
+}
+
+.p-dialog .p-dialog-header {
+    background: rgba(30, 30, 30, 0.9) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+.p-dialog .p-dialog-content {
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .p-button {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
 }

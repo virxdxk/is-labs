@@ -1,6 +1,6 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
-import {Menubar} from 'primereact/menubar'
+import { Link } from 'react-router-dom'
+import { Menubar } from 'primereact/menubar'
 
 const Header = () => {
     const items = [
@@ -36,9 +36,16 @@ const Header = () => {
         }
     ]
 
+    const start = (
+        <div className="flex align-items-center">
+            <i className="pi pi-film text-2xl mr-2" style={{ color: '#ff6b6b' }}></i>
+            <span className="text-xl font-bold" style={{ color: '#ffffff' }}>Cinema Database</span>
+        </div>
+    )
+
     return (
-        <div className="card">
-            <Menubar model={items}/>
+        <div className="card mb-3">
+            <Menubar model={items} start={start} />
         </div>
     )
 }

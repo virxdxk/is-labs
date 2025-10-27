@@ -1,7 +1,7 @@
 import React from 'react'
-import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom'
-import {PrimeReactProvider} from 'primereact/api'
-import 'primereact/resources/themes/lara-light-indigo/theme.css'
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
+import { PrimeReactProvider } from 'primereact/api'
+import 'primereact/resources/themes/lara-dark-indigo/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
@@ -16,14 +16,14 @@ function App() {
         <PrimeReactProvider>
             <Router>
                 <div className="App">
-                    <Header/>
+                    <Header />
                     <div className="container">
                         <Routes>
-                            <Route path="/" element={<MovieListPage/>}/>
-                            <Route path="/movies" element={<MovieListPage/>}/>
+                            <Route path="/" element={<MovieListPage />} />
+                            <Route path="/movies" element={<MovieListPage />} />
                             <Route path="/people" element={<PersonListPage />} />
-                            <Route path="/special-operations" element={<SpecialOperationsPage/>}/>
-                            <Route path="*" element={<Navigate to="/" replace/>}/>
+                            <Route path="/special-operations" element={<SpecialOperationsPage />} />
+                            <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </div>
                 </div>
