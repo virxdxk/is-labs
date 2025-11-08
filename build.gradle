@@ -82,6 +82,12 @@ build {
     dependsOn copyFrontendToWebapp
 }
 
+task cleanRemote(type: Exec) {
+    commandLine 'ssh', '-p', '2222',
+            's412939@helios.cs.ifmo.ru',
+            'rm -rf ~/is-lab/frontend/www/*'
+}
+
 // Task to deploy WAR to server via SSH
 task deployWAR(type: Exec) {
     dependsOn war
@@ -94,8 +100,8 @@ task deployWAR(type: Exec) {
 
 // Task to deploy frontend dist to server
 task deployFrontend(type: Exec) {
-    dependsOn frontendBuild
-    commandLine 'scp', '-r', '-P', '2222', "${project.projectDir}/frontend/dist/", 's412939@helios.cs.ifmo.ru:~/'
+    dependsOn frontendBuild, cleanRemote
+    commandLine 'scp', '-r', '-P', '2222', "${project.projectDir}/frontend/dist/.", 's412939@helios.cs.ifmo.ru:~/is-lab/frontend/www'
     
     doLast {
         println "Frontend dist folder deployed to server successfully!"
