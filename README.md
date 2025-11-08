@@ -243,7 +243,7 @@ psql -h localhost -U USERNAME -d DATABASE -f data.sql
 > Перед выполнением этой команды wildfly должен быть запущен
 
 ```bash
-./bin/jboss-cli.sh --connect --controller=localhost:9595 --command="deploy is-labs-1.0.war --force"
+./bin/jboss-cli.sh --connect --controller=localhost:9595 --command="deploy app.war --force"
 ```
 
 ### Фронт

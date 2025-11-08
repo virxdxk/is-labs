@@ -75,6 +75,7 @@ task copyFrontendToWebapp(type: Copy) {
 war {
     dependsOn copyFrontendToWebapp
     from "${project.buildDir}/webapp"
+    archiveFileName = 'app.war'
 }
 
 // Make build task depend on frontend build
@@ -91,7 +92,7 @@ task cleanRemote(type: Exec) {
 // Task to deploy WAR to server via SSH
 task deployWAR(type: Exec) {
     dependsOn war
-    commandLine 'scp', '-P', '2222', "${project.buildDir}/libs/${project.name}-${project.version}.war", 's412939@helios.cs.ifmo.ru:~/'
+    commandLine 'scp', '-P', '2222', "${project.buildDir}/libs/app.war", 's412939@helios.cs.ifmo.ru:~/'
     
     doLast {
         println "WAR file deployed to server successfully!"
