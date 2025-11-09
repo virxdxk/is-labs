@@ -1,8 +1,6 @@
 package ru.itmo.se.is.dto.person;
 
 import jakarta.validation.constraints.Min;
-import jakarta.ws.rs.DefaultValue;
-import jakarta.ws.rs.QueryParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,33 +17,21 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class PersonLazyBeanParamDto implements Serializable {
     @Min(0)
-    @DefaultValue("0")
-    @QueryParam("first")
-    private int first;
+    private int first = 0;
 
-    @DefaultValue("10")
-    @QueryParam("pageSize")
-    private int pageSize;
+    private int pageSize = 10;
 
     @AllowedValues({"name", "eyeColor", "hairColor", "weight", "nationality"})
-    @DefaultValue("name")
-    @QueryParam("sortField")
-    private String sortField;
+    private String sortField = "name";
 
     @AllowedValues({"-1", "1"})
-    @DefaultValue("1")
-    @QueryParam("sortOrder")
-    private int sortOrder;
+    private int sortOrder = 1;
 
-    @QueryParam("name")
     private String nameFilter;
 
-    @QueryParam("eyeColor")
     private Color eyeColorFilter;
 
-    @QueryParam("hairColor")
     private Color hairColorFilter;
 
-    @QueryParam("nationality")
     private Country nationalityFilter;
 }

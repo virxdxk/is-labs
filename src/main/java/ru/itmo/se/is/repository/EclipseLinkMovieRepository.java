@@ -1,18 +1,16 @@
 package ru.itmo.se.is.repository;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.eclipse.persistence.sessions.DatabaseSession;
 import org.eclipse.persistence.sessions.UnitOfWork;
+import org.springframework.stereotype.Repository;
 import ru.itmo.se.is.entity.Movie;
 import ru.itmo.se.is.entity.Person;
 
-@ApplicationScoped
-@NoArgsConstructor
+@org.springframework.stereotype.Repository
 public class EclipseLinkMovieRepository extends GenericEclipseLinkRepository<Movie, Long> {
 
-    @Inject
+    @Autowired
     public EclipseLinkMovieRepository(DatabaseSession session) {
         super(Movie.class, session);
     }

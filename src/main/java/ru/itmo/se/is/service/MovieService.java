@@ -1,7 +1,7 @@
 package ru.itmo.se.is.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.itmo.se.is.dto.movie.*;
 import ru.itmo.se.is.dto.person.PersonResponseDto;
 import ru.itmo.se.is.entity.Movie;
@@ -19,19 +19,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@ApplicationScoped
+@Service
 public class MovieService {
 
-    @Inject
+    @Autowired
     private Repository<Movie, Long> repository;
 
-    @Inject
+    @Autowired
     private EclipseLinkLazyMovieRepository lazyRepository;
 
-    @Inject
+    @Autowired
     private MovieMapper mapper;
 
-    @Inject
+    @Autowired
     private PersonMapper personMapper;
 
     public MovieResponseDto create(MovieRequestDto dto) {

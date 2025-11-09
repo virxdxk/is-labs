@@ -1,24 +1,21 @@
 package ru.itmo.se.is.config;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
-import lombok.NoArgsConstructor;
 import org.eclipse.persistence.platform.database.PostgreSQLPlatform;
 import org.eclipse.persistence.sequencing.NativeSequence;
 import org.eclipse.persistence.sessions.DatabaseLogin;
 import org.eclipse.persistence.sessions.JNDIConnector;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-@ApplicationScoped
-@NoArgsConstructor
+@Configuration
 public class DatabaseLoginConfig {
 
-    @Produces
-    @ApplicationScoped
-    public DatabaseLogin createDatabaseLogin() {
+    @Bean
+    public DatabaseLogin databaseLogin() {
         try {
             DataSource ds = (DataSource) new InitialContext().lookup("java:/jdbc/MyDS");
 

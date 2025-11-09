@@ -1,7 +1,7 @@
 package ru.itmo.se.is.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.postgresql.util.PSQLException;
 import ru.itmo.se.is.dto.person.PersonLazyBeanParamDto;
@@ -19,15 +19,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ApplicationScoped
+@Service
 public class PersonService {
-    @Inject
+    @Autowired
     private Repository<Person, Long> repository;
 
-    @Inject
+    @Autowired
     private EclipseLinkLazyPersonRepository lazyRepository;
 
-    @Inject
+    @Autowired
     private PersonMapper mapper;
 
     public PersonResponseDto create(PersonRequestDto dto) {

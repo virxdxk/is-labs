@@ -1,28 +1,99 @@
-package ru.itmo.se.is.db.descriptor;
+package ru.itmo.se.is.config;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
 import org.eclipse.persistence.descriptors.ClassDescriptor;
 import org.eclipse.persistence.descriptors.RelationalDescriptor;
+import org.eclipse.persistence.internal.sessions.DatabaseSessionImpl;
 import org.eclipse.persistence.mappings.AggregateObjectMapping;
 import org.eclipse.persistence.mappings.DirectToFieldMapping;
 import org.eclipse.persistence.mappings.OneToOneMapping;
 import org.eclipse.persistence.mappings.converters.EnumTypeConverter;
+import org.eclipse.persistence.sessions.DatabaseLogin;
+import org.eclipse.persistence.sessions.DatabaseSession;
+import org.eclipse.persistence.sessions.Project;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import ru.itmo.se.is.annotation.EntityDescriptor;
 import ru.itmo.se.is.db.converter.ZonedDateTimeConverter;
 import ru.itmo.se.is.entity.Coordinates;
+import ru.itmo.se.is.entity.Location;
 import ru.itmo.se.is.entity.Movie;
 import ru.itmo.se.is.entity.Person;
+import ru.itmo.se.is.entity.value.Color;
+import ru.itmo.se.is.entity.value.Country;
 import ru.itmo.se.is.entity.value.MovieGenre;
 import ru.itmo.se.is.entity.value.MpaaRating;
 
-@ApplicationScoped
-public class MovieDescriptorProvider {
+import java.util.List;
 
-    @Produces
-    @ApplicationScoped
+@Configuration
+public class EclipseLinkConfig {
+
+    @Autowired
+    private DatabaseLogin databaseLogin;
+
+    @Bean
     @EntityDescriptor
-    public ClassDescriptor createMovieDescriptor() {
+    public ClassDescriptor personDescriptor() {
+        ClassDescriptor descriptor = new RelationalDescriptor();
+        descriptor.setJavaClass(Person.class);
+        descriptor.setTableName("person");
+        descriptor.addPrimaryKeyFieldName("id");
+        descriptor.setSequenceNumberFieldName("id");
+        descriptor.setSequenceNumberName("person_id_seq");
+
+        DirectToFieldMapping idMapping = new DirectToFieldMapping();
+        idMapping.setAttributeName("id");
+        idMapping.setFieldName("id");
+        idMapping.setIsPrimaryKeyMapping(true);
+        descriptor.addMapping(idMapping);
+
+        DirectToFieldMapping nameMapping = new DirectToFieldMapping();
+        nameMapping.setAttributeName("name");
+        nameMapping.setFieldName("name");
+        descriptor.addMapping(nameMapping);
+
+        DirectToFieldMapping eyeColorMapping = new DirectToFieldMapping();
+        eyeColorMapping.setAttributeName("eyeColor");
+        eyeColorMapping.setFieldName("eye_color");
+        EnumTypeConverter eyeColorConverter = new EnumTypeConverter(eyeColorMapping, Color.class, false);
+        eyeColorMapping.setConverter(eyeColorConverter);
+        descriptor.addMapping(eyeColorMapping);
+
+        DirectToFieldMapping hairColorMapping = new DirectToFieldMapping();
+        hairColorMapping.setAttributeName("hairColor");
+        hairColorMapping.setFieldName("hair_color");
+        hairColorMapping.setIsOptional(false);
+        EnumTypeConverter hairColorConverter = new EnumTypeConverter(hairColorMapping, Color.class, false);
+        hairColorMapping.setConverter(hairColorConverter);
+        descriptor.addMapping(hairColorMapping);
+
+        AggregateObjectMapping locationMapping = new AggregateObjectMapping();
+        locationMapping.setAttributeName("location");
+        locationMapping.setReferenceClass(Location.class);
+        locationMapping.addFieldNameTranslation("location_x", "x");
+        locationMapping.addFieldNameTranslation("location_y", "y");
+        locationMapping.addFieldNameTranslation("location_z", "z");
+        descriptor.addMapping(locationMapping);
+
+        DirectToFieldMapping weightMapping = new DirectToFieldMapping();
+        weightMapping.setAttributeName("weight");
+        weightMapping.setFieldName("weight");
+        descriptor.addMapping(weightMapping);
+
+        DirectToFieldMapping nationalityMapping = new DirectToFieldMapping();
+        nationalityMapping.setAttributeName("nationality");
+        nationalityMapping.setFieldName("nationality");
+        EnumTypeConverter natConv = new EnumTypeConverter(nationalityMapping, Country.class, false);
+        nationalityMapping.setConverter(natConv);
+        descriptor.addMapping(nationalityMapping);
+
+        return descriptor;
+    }
+
+    @Bean
+    @EntityDescriptor
+    public ClassDescriptor movieDescriptor() {
         RelationalDescriptor descriptor = new RelationalDescriptor();
         descriptor.setJavaClass(Movie.class);
         descriptor.setTableName("movie");
@@ -137,4 +208,72 @@ public class MovieDescriptorProvider {
 
         return descriptor;
     }
+
+    @Bean
+    @EntityDescriptor
+    public ClassDescriptor locationDescriptor() {
+        ClassDescriptor descriptor = new ClassDescriptor();
+        descriptor.setJavaClass(Location.class);
+        descriptor.descriptorIsAggregate();
+
+        DirectToFieldMapping x = new DirectToFieldMapping();
+        x.setAttributeName("x");
+        x.setFieldName("x");
+        descriptor.addMapping(x);
+
+        DirectToFieldMapping y = new DirectToFieldMapping();
+        y.setAttributeName("y");
+        y.setFieldName("y");
+        descriptor.addMapping(y);
+
+        DirectToFieldMapping z = new DirectToFieldMapping();
+        z.setAttributeName("z");
+        z.setFieldName("z");
+        descriptor.addMapping(z);
+
+        return descriptor;
+    }
+
+    @Bean
+    @EntityDescriptor
+    public ClassDescriptor coordinatesDescriptor() {
+        ClassDescriptor descriptor = new ClassDescriptor();
+        descriptor.setJavaClass(Coordinates.class);
+        descriptor.descriptorIsAggregate();
+
+        DirectToFieldMapping xMapping = new DirectToFieldMapping();
+        xMapping.setAttributeName("x");
+        xMapping.setFieldName("x");
+        descriptor.addMapping(xMapping);
+
+        DirectToFieldMapping yMapping = new DirectToFieldMapping();
+        yMapping.setAttributeName("y");
+        yMapping.setFieldName("y");
+        descriptor.addMapping(yMapping);
+
+        return descriptor;
+    }
+
+    @Bean
+    public Project project(
+            @EntityDescriptor ClassDescriptor personDescriptor,
+            @EntityDescriptor ClassDescriptor movieDescriptor,
+            @EntityDescriptor ClassDescriptor locationDescriptor,
+            @EntityDescriptor ClassDescriptor coordinatesDescriptor) {
+        Project project = new Project();
+        project.addDescriptor(personDescriptor);
+        project.addDescriptor(movieDescriptor);
+        project.addDescriptor(locationDescriptor);
+        project.addDescriptor(coordinatesDescriptor);
+        project.setLogin(databaseLogin);
+        return project;
+    }
+
+    @Bean(destroyMethod = "logout")
+    public DatabaseSession databaseSession(Project project) {
+        DatabaseSessionImpl session = (DatabaseSessionImpl) project.createDatabaseSession();
+        session.login();
+        return session;
+    }
 }
+

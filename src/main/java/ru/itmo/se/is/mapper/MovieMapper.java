@@ -1,9 +1,9 @@
 package ru.itmo.se.is.mapper;
 
-import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.itmo.se.is.config.MapperConfig;
 import ru.itmo.se.is.dto.movie.MovieRequestDto;
 import ru.itmo.se.is.dto.movie.MovieResponseDto;
@@ -16,7 +16,7 @@ import java.util.List;
 @Mapper(config = MapperConfig.class)
 public abstract class MovieMapper {
 
-    @Inject
+    @Autowired
     private PersonService personService;
 
     @Mapping(target = "id", ignore = true)

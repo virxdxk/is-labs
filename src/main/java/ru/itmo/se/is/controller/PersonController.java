@@ -1,12 +1,10 @@
 package ru.itmo.se.is.controller;
 
-import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.itmo.se.is.dto.person.PersonLazyBeanParamDto;
 import ru.itmo.se.is.dto.person.PersonRequestDto;
 import ru.itmo.se.is.dto.person.PersonResponseDto;
@@ -16,44 +14,43 @@ import ru.itmo.se.is.websocket.WebSocketMessageType;
 
 import java.net.URI;
 
-@Path("/people")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
+@RestController
+@RequestMapping("/people")
 public class PersonController {
 
-    @Inject
+    @Autowired
     private PersonService service;
 
-    @GET
-    public Response getAllPeople(@Valid @BeanParam PersonLazyBeanParamDto lazyBeanParamDto) {
-        return Response.ok(service.lazyGet(lazyBeanParamDto)).build();
+    @GetMapping
+    public ResponseEntity<?> getAllPeople(@Valid @ModelAttribute PersonLazyBeanParamDto lazyBeanParamDto) {
+        return ResponseEntity.ok(service.lazyGet(lazyBeanParamDto));
     }
 
-    @POST
-    public Response createPerson(@Context UriInfo uriInfo, @Valid PersonRequestDto dto) {
+    @PostMapping
+    public ResponseEntity<PersonResponseDto> createPerson(@Valid @RequestBody PersonRequestDto dto) {
         PersonResponseDto createdPerson = service.create(dto);
 
-        URI location = uriInfo.getAbsolutePathBuilder()
-                .path("{id}")
-                .resolveTemplate("id", createdPerson.getId())
-                .build();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(createdPerson.getId())
+                .toUri();
+        
         WebSocketEndpoint.broadcast(WebSocketMessageType.PERSON);
-        return Response.created(location).entity(createdPerson).build();
+        return ResponseEntity.created(location).body(createdPerson);
     }
 
-    @PATCH
-    @Path("/{id}")
-    public Response updatePerson(@PathParam("id") long id, @Valid PersonRequestDto dto) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updatePerson(@PathVariable("id") long id, @Valid @RequestBody PersonRequestDto dto) {
         service.update(id, dto);
         WebSocketEndpoint.broadcast(WebSocketMessageType.PERSON);
-        return Response.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 
-    @DELETE
-    @Path("/{id}")
-    public Response deletePerson(@PathParam("id") long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePerson(@PathVariable("id") long id) {
         service.delete(id);
         WebSocketEndpoint.broadcast(WebSocketMessageType.PERSON);
-        return Response.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 }

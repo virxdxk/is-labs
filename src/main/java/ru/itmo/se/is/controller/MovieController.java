@@ -1,12 +1,10 @@
 package ru.itmo.se.is.controller;
 
-import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.itmo.se.is.dto.movie.MovieLazyBeanParamDto;
 import ru.itmo.se.is.dto.movie.MovieRequestDto;
 import ru.itmo.se.is.dto.movie.MovieResponseDto;
@@ -16,78 +14,71 @@ import ru.itmo.se.is.websocket.WebSocketMessageType;
 
 import java.net.URI;
 
-@Path("/movies")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
+@RestController
+@RequestMapping("/movies")
 public class MovieController {
 
-    @Inject
+    @Autowired
     private MovieService service;
 
-    @GET
-    public Response getAllMovies(@Valid @BeanParam MovieLazyBeanParamDto lazyBeanParamDto) {
-        return Response.ok(service.lazyGet(lazyBeanParamDto)).build();
+    @GetMapping
+    public ResponseEntity<?> getAllMovies(@Valid @ModelAttribute MovieLazyBeanParamDto lazyBeanParamDto) {
+        return ResponseEntity.ok(service.lazyGet(lazyBeanParamDto));
     }
 
-    @POST
-    public Response createMovie(@Context UriInfo uriInfo, @Valid MovieRequestDto dto) {
+    @PostMapping
+    public ResponseEntity<MovieResponseDto> createMovie(@Valid @RequestBody MovieRequestDto dto) {
         MovieResponseDto createdMovie = service.create(dto);
 
-        URI location = uriInfo.getAbsolutePathBuilder()
-                .path("{id}")
-                .resolveTemplate("id", createdMovie.getId())
-                .build();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(createdMovie.getId())
+                .toUri();
 
         WebSocketEndpoint.broadcast(WebSocketMessageType.MOVIE);
 
-        return Response.created(location).entity(createdMovie).build();
+        return ResponseEntity.created(location).body(createdMovie);
     }
 
-    @PATCH
-    @Path("/{id}")
-    public Response updateMovie(@PathParam("id") long id, @Valid MovieRequestDto dto) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateMovie(@PathVariable("id") long id, @Valid @RequestBody MovieRequestDto dto) {
         service.update(id, dto);
         WebSocketEndpoint.broadcast(WebSocketMessageType.MOVIE);
-        return Response.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 
-    @DELETE
-    @Path("/{id}")
-    public Response deleteMovie(@PathParam("id") long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMovie(@PathVariable("id") long id) {
         service.delete(id);
         WebSocketEndpoint.broadcast(WebSocketMessageType.MOVIE);
-        return Response.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 
-    @GET
-    @Path("/count-by-tagline/{tagline}")
-    public Response countByTagline(@PathParam("tagline") String tagline) {
-        return Response.ok(service.countByTagline(tagline)).build();
+    @GetMapping("/count-by-tagline/{tagline}")
+    public ResponseEntity<?> countByTagline(@PathVariable("tagline") String tagline) {
+        return ResponseEntity.ok(service.countByTagline(tagline));
     }
 
-    @GET
-    @Path("/count-less-than-golden-palm/{count}")
-    public Response countLessThanGoldenPalm(@PathParam("count") long count) {
-        return Response.ok(service.countLessThanGoldenPalm(count)).build();
+    @GetMapping("/count-less-than-golden-palm/{count}")
+    public ResponseEntity<?> countLessThanGoldenPalm(@PathVariable("count") long count) {
+        return ResponseEntity.ok(service.countLessThanGoldenPalm(count));
     }
 
-    @GET
-    @Path("/count-greater-than-golden-palm/{count}")
-    public Response countGreaterThanGoldenPalm(@PathParam("count") long count) {
-        return Response.ok(service.countGreaterThanGoldenPalm(count)).build();
+    @GetMapping("/count-greater-than-golden-palm/{count}")
+    public ResponseEntity<?> countGreaterThanGoldenPalm(@PathVariable("count") long count) {
+        return ResponseEntity.ok(service.countGreaterThanGoldenPalm(count));
     }
 
-    @GET
-    @Path("/directors-without-oscars")
-    public Response getDirectorsWithoutOscars() {
-        return Response.ok(service.getDirectorsWithoutOscars()).build();
+    @GetMapping("/directors-without-oscars")
+    public ResponseEntity<?> getDirectorsWithoutOscars() {
+        return ResponseEntity.ok(service.getDirectorsWithoutOscars());
     }
 
-    @PATCH
-    @Path("/add-oscar-to-r-rated")
-    public Response addOscarToRated() {
+    @PatchMapping("/add-oscar-to-r-rated")
+    public ResponseEntity<Void> addOscarToRated() {
         service.addOscarToRated();
         WebSocketEndpoint.broadcast(WebSocketMessageType.MOVIE);
-        return Response.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 }

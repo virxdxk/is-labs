@@ -1,15 +1,13 @@
 package ru.itmo.se.is.repository;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.eclipse.persistence.sessions.DatabaseSession;
+import org.springframework.stereotype.Repository;
 import ru.itmo.se.is.entity.Person;
 
-@ApplicationScoped
-@NoArgsConstructor
+@org.springframework.stereotype.Repository
 public class EclipseLinkLazyPersonRepository extends GenericEclipseLinkLazyRepository<Person> {
-    @Inject
+    @Autowired
     public EclipseLinkLazyPersonRepository(DatabaseSession session) {
         super(Person.class, session);
     }
