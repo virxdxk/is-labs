@@ -89,10 +89,16 @@ task cleanRemote(type: Exec) {
             'rm -rf ~/is-lab/frontend/www/*'
 }
 
+task cleanRemoteWar(type: Exec) {
+    commandLine 'ssh', '-p', '2222',
+            's412939@helios.cs.ifmo.ru',
+            'rm -rf ~/is-lab/backend/wildfly-35.0.1.Final/standalone/deployments/*'
+}
+
 // Task to deploy WAR to server via SSH
 task deployWAR(type: Exec) {
-    dependsOn war
-    commandLine 'scp', '-P', '2222', "${project.buildDir}/libs/app.war", 's412939@helios.cs.ifmo.ru:~/'
+    dependsOn war, cleanRemoteWar
+    commandLine 'scp', '-P', '2222', "${project.buildDir}/libs/app.war", 's412939@helios.cs.ifmo.ru:~/is-lab/backend/wildfly-35.0.1.Final/standalone/deployments'
     
     doLast {
         println "WAR file deployed to server successfully!"
